@@ -147,7 +147,7 @@ public class TrackerMap {
                         port = singleNodeMap.get("port");
                         nodeinfo.put("host", host);
                         nodeinfo.put("port", port);
-                        nodeinfo.put("piece", count);
+                        nodeinfo.put("pieceid", String.valueOf(count));
                         array.add(nodeinfo);
                         count++;
                     }
