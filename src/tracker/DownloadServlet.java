@@ -1,6 +1,7 @@
 package tracker;
 
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,10 +13,10 @@ import java.io.PrintWriter;
 /**
  * Create event, send info to event server
  */
-public class CreateInfoServlet extends BaseServlet {
+public class DownloadServlet extends BaseServlet {
     private TrackerMap tm;
 
-    public CreateInfoServlet(TrackerMap tm) {
+    public DownloadServlet(TrackerMap tm) {
         this.tm = tm;
     }
 
@@ -34,22 +35,28 @@ public class CreateInfoServlet extends BaseServlet {
         int piecenum, size;
         try {
             String body = extractPostRequestBody(request);
-            System.out.println(body);
             JSONObject obj = readJsonObj(body);
+            System.out.println(obj.toString());
+            host = (String) obj.get("host");
+            port = (String) obj.get("port");
+            filename = (String) obj.get("filename");
 
-            JSONObject node = (JSONObject) obj.get("node");
-            JSONObject file = (JSONObject) obj.get("file");
+            tm.addnode(host,port);
+            piecenum = tm.getPieceNum(filename);
+            size = tm.getFileSize(filename);
 
-            host = (String) node.get("host");
-            port = (String) node.get("port");
+            JSONArray array = tm.nodeJsonArray(filename, piecenum);
 
-            filename = (String) file.get("filename");
-            piecenum = Integer.parseInt((String) file.get("piecenum"));
-            size = Integer.parseInt((String) file.get("size"));
-            tm.addnode(host, port);
-            tm.addNewFile(filename, piecenum, host + port, size);
+            obj = new JSONObject();
+            JSONObject fileinfo = new JSONObject();
+            JSONObject nodes = new JSONObject();
 
-            out.println();
+            fileinfo.put("piecenum", String.valueOf(piecenum));
+            fileinfo.put("size", String.valueOf(size));
+            obj.put("fileinfo",fileinfo);
+            obj.put("nodes", array);
+
+            out.println(obj.toString());
         } catch (Exception e) {
             response.setStatus(400);
             e.printStackTrace();

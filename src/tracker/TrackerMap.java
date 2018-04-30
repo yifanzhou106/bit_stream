@@ -23,6 +23,7 @@ public class TrackerMap {
     public TrackerMap() {
         fileinfo = new HashMap<>();
         nodeMap = new HashMap<>();
+        fileinfolock = new ReentrantReadWriteLock();
         filemaplock = new ReentrantReadWriteLock();
         nodelock = new ReentrantReadWriteLock();
         filemap = new HashMap<>();
@@ -38,7 +39,7 @@ public class TrackerMap {
                 nodeMap.put(host + port, singleNodeMap);
             }
         } finally {
-            nodelock.writeLock().lock();
+            nodelock.writeLock().unlock();
         }
     }
 
@@ -127,6 +128,16 @@ public class TrackerMap {
         }
     }
 
+    public Integer getFileSize(String filename) {
+        fileinfolock.readLock().lock();
+        try {
+            singleFileinfo = fileinfo.get(filename);
+            return singleFileinfo.get("size");
+        } finally {
+            fileinfolock.readLock().unlock();
+        }
+    }
+
     public JSONArray nodeJsonArray(String filename, int piecenum) {
         nodelock.readLock().lock();
         filemaplock.readLock().lock();
@@ -136,7 +147,8 @@ public class TrackerMap {
             JSONArray array = new JSONArray();
             JSONObject nodeinfo;
             fileNodeDetail = filemap.get(filename);
-            while (count != (piecenum - 1))
+            while (count != piecenum) {
+                System.out.println(count);
                 for (HashMap.Entry<String, TreeSet<Integer>> entry : fileNodeDetail.entrySet()) {
                     piecelist = entry.getValue();
                     nodekey = entry.getKey();
@@ -152,6 +164,7 @@ public class TrackerMap {
                         count++;
                     }
                 }
+            }
             return array;
         } finally {
             nodelock.readLock().unlock();

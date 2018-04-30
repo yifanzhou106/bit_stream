@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
@@ -21,13 +22,17 @@ import java.net.URL;
 public class TrackerServer extends BaseServlet{
     protected static Logger log = LogManager.getLogger();
     public static String HOST = "localhost";
-    public static int PORT = 5600;
+    public static int PORT = 7600;
     public static String EVENT_PORT = "7000";
     public static  String EVENT_HOST = "localhost";
     static int USER_PORT = 2000;
     static String USER_HOST = "mc01";
 
+    private TrackerMap tm;
 
+    public TrackerServer() {
+        tm = new TrackerMap();
+    }
     public static void main(String[] args) {
         TrackerServer ts = new TrackerServer();
 
@@ -53,18 +58,16 @@ public class TrackerServer extends BaseServlet{
 
         ServletHandler handler = new ServletHandler();
         server.setHandler(handler);
-        ServletContextHandler context = new ServletContextHandler();
 
-        context.addServlet(CreateInfoServlet.class, "/create");
-//        context.addServlet(UserServlet.class, "/users/*");
-//        context.addServlet(EventServlet.class, "/events");
-//        context.addServlet(CreateEventServlet.class, "/events/create");
-//        context.addServlet(EventServlet.class, "/events/*");
-//        context.addServlet(UpdatePrimaryNodeServlet.class, "/nodes");
+        handler.addServletWithMapping(new ServletHolder(new CreateInfoServlet(ts.tm)), "/create");
+        handler.addServletWithMapping(new ServletHolder(new DownloadServlet(ts.tm)), "/download");
+
+//        handler.addServletWithMapping(new ServletHolder(new EventPurchaseServlet(es.edm, es.qw)), "/purchase/*");
+//        handler.addServletWithMapping(new ServletHolder(new FindNodeServlet(es.edm)), "/nodes");
 
 
+        server.setHandler(handler);
 
-        server.setHandler(context);
 
         log.info("Starting server on port " + PORT + "...");
 

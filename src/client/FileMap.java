@@ -3,6 +3,7 @@ package client;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -25,32 +26,50 @@ public class FileMap {
     public void addFile(String filename, int pieceid, byte[] pieces) {
         filemaplock.writeLock().lock();
         try {
-            if (!filemap.containsKey(filename)){
+            if (!filemap.containsKey(filename)) {
                 filePieces = new TreeMap<>();
-                filePieces.put(pieceid,pieces);
-                filemap.put(filename,filePieces);
-            }
-            else {
+                filePieces.put(pieceid, pieces);
+                filemap.put(filename, filePieces);
+            } else {
                 filePieces = filemap.get(filename);
-                filePieces.put(pieceid,pieces);
+                filePieces.put(pieceid, pieces);
                 filemap.remove(filename);
-                filemap.put(filename,filePieces);
+                filemap.put(filename, filePieces);
             }
         } finally {
             filemaplock.writeLock().unlock();
         }
     }
 
+    public byte[] getPiece(String filename, int pieceid) {
+        filemaplock.readLock().lock();
+        try {
+            byte[] piece;
+            filePieces = filemap.get(filename);
+            piece = filePieces.get(pieceid);
+            return piece;
 
-    public JSONObject nodeJson(String host, String port, String piece) {
+        } finally {
+            filemaplock.readLock().unlock();
+        }
+    }
 
-        JSONObject node = new JSONObject();
-        node.put("host", host);
-        node.put("port", port);
-        node.put("piece", piece);
+    public byte[] getFile(String filename, int piecenum) {
+        filemaplock.readLock().lock();
+        try {
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            filePieces = filemap.get(filename);
+            for (int i = 0; i < piecenum; i++)
+                output.write(filePieces.get(i));
 
-        return node;
+            return output.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
 
+        } finally {
+            filemaplock.readLock().unlock();
+        }
     }
 
     public JSONObject fileinfoJson(String filename, String size, String piecenum) {

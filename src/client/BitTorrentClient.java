@@ -17,10 +17,9 @@ import java.util.concurrent.Executors;
  * @Author Yifan Zhou
  */
 public class BitTorrentClient extends BaseServlet {
-    protected static Logger log = LogManager.getLogger();
     public static String HOST = "localhost";
-    public static int PORT = 5600;
-    public static String TRACKER_PORT = "7000";
+    public static int PORT = 5700;
+    public static String TRACKER_PORT = "7600";
     public static String TRACKER_HOST = "localhost";
     public static volatile boolean isShutdown = false;
     public final ExecutorService threads = Executors.newCachedThreadPool();
@@ -30,7 +29,7 @@ public class BitTorrentClient extends BaseServlet {
 
     public BitTorrentClient() {
         fm = new FileMap();
-        ui = new UI(threads);
+        ui = new UI(threads,fm);
         threads.submit(ui);
     }
 
@@ -68,15 +67,12 @@ public class BitTorrentClient extends BaseServlet {
 
         server.setHandler(handler);
 
-        log.info("Starting server on port " + PORT + "...");
 
         try {
             server.start();
             server.join();
 
-            log.info("Exiting...");
         } catch (Exception ex) {
-            log.fatal("Interrupted while running server.", ex);
             System.exit(-1);
         }
     }

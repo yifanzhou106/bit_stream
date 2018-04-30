@@ -8,15 +8,15 @@ import java.util.concurrent.ExecutorService;
 import static client.BitTorrentClient.isShutdown;
 
 
-
 public class UI implements Runnable {
 
     private ExecutorService threads;
+    private FileMap fm;
 
 
-    public UI(ExecutorService threads) {
+    public UI(ExecutorService threads, FileMap fm) {
         this.threads = threads;
-
+        this.fm = fm;
     }
 
     @Override
@@ -40,12 +40,14 @@ public class UI implements Runnable {
                 case "upload":
                     System.out.println("File Location? ");
                     String filelocation = reader.nextLine();
+                    threads.submit(new Uploader(threads, fm, filelocation));
+
                     break;
 
                 case "download":
                     System.out.println("File name? ");
                     String filename = reader.nextLine();
-                    threads.submit(new Downloader(threads,filename));
+                    threads.submit(new Downloader(threads, filename));
                     break;
 
                 case "exit":
