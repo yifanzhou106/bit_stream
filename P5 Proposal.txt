@@ -1,3 +1,0 @@
-For the project 5, I will work on BitTorrent-like approach for downloading history. In this project, I will create two jar packets, tracker and client. Tracker server will receive request and handle with all files and nodes information. Client will implemented two main method download and upload.
-Upload: Load file from DIR, then divide them in to Byte array pieces(Each piece except the last one will have fixed size). After that, send file and its node information to the tracker. The tracker will save them into maps.
-Download: New node will send post request to the tracker with its node information and file name. Tracker will then reply nodes and file detailed info. New node will create connection with seed node based on these info.
