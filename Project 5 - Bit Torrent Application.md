@@ -128,10 +128,6 @@ Responses:
 </details>
 
 
-<details>
-
-
-
 #### Client
 
 <details>
@@ -159,7 +155,6 @@ Responses:
 </table>
 </details>
 
-<details>
 
 <details>
 <summary>POST /send</summary>
@@ -184,7 +179,6 @@ Responses:
 </table>
 </details>
 
-<details>
 
 
 ### First Checking Point 
