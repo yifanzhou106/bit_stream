@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Provides base functionality to all servlets.
@@ -171,15 +172,10 @@ public class BaseServlet extends HttpServlet {
             byte[] buffer = new byte[1024];
             ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-            int line = 0;
-            // read bytes from stream, and store them in buffer
-            while ((line = stream.read(buffer)) != -1) {
-                // Writes bytes from byte array (buffer) into output stream.
-                os.write(buffer, 0, line);
+            int n = 0;
+            while ((n = stream.read(buffer)) !=-1) {
+                os.write(buffer, 0, n);
             }
-            stream.close();
-            os.flush();
-            os.close();
             return os.toByteArray();
         }
         return null;
@@ -211,11 +207,27 @@ public class BaseServlet extends HttpServlet {
 
     }
 
-    protected String getTimeStamp(String Host, int Port) {
-        String timestamp;
-        UUID idOne = UUID.randomUUID();
-        timestamp = Host + Port + idOne;
-        return timestamp;
+    public class sendReceive implements Runnable {
+        private String url;
+        private String jsonString;
+        private CountDownLatch countdowntimer;
+
+
+        public sendReceive(String url, String jsonString, CountDownLatch countdowntimer) {
+            this.url = url;
+            this.jsonString = jsonString;
+            this.countdowntimer = countdowntimer;
+        }
+
+        @Override
+        public void run() {
+            try {
+                sendPostResponse(url, jsonString);
+                countdowntimer.countDown();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

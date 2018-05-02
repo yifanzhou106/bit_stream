@@ -61,9 +61,8 @@ public class TrackerServer extends BaseServlet{
 
         handler.addServletWithMapping(new ServletHolder(new CreateInfoServlet(ts.tm)), "/create");
         handler.addServletWithMapping(new ServletHolder(new DownloadServlet(ts.tm)), "/download");
-
-//        handler.addServletWithMapping(new ServletHolder(new EventPurchaseServlet(es.edm, es.qw)), "/purchase/*");
-//        handler.addServletWithMapping(new ServletHolder(new FindNodeServlet(es.edm)), "/nodes");
+        handler.addServletWithMapping(new ServletHolder(new RemoveNodeServlet(ts.tm)), "/remove");
+        handler.addServletWithMapping(new ServletHolder(new AddPieceServlet(ts.tm)), "/addpiece");
 
 
         server.setHandler(handler);

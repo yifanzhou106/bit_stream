@@ -7,12 +7,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static client.BitTorrentClient.*;
 
 
 /**
@@ -37,38 +41,56 @@ public class ReceiverServlet extends BaseServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+        PrintWriter out = response.getWriter();
+        String body = extractPostRequestBody(request);
+
         try {
-            PrintWriter out = response.getWriter();
-            String body = extractPostRequestBody(request);
-            JSONObject jsonobj = readJsonObj(body);
-            String host = (String)jsonobj.get("host");
-            String port = (String)jsonobj.get("port");
-            String pieceid = (String)jsonobj.get("pieceid");
-            String filename = (String)jsonobj.get("filename");
+            while (true) {
+                JSONObject jsonobj = readJsonObj(body);
+                String host = (String) jsonobj.get("host");
+                String port = (String) jsonobj.get("port");
+                String pieceid = (String) jsonobj.get("pieceid");
+                String filename = (String) jsonobj.get("filename");
 
-            byte[] responseS;
-            String url = "http://" + host + ":" + port + "/seed";
-            System.out.println(url);
-            String s;
-            JSONObject obj = new JSONObject();
-            JSONObject item = new JSONObject();
-            item.put("filename", filename);
-            item.put("pieceid", pieceid);
+                byte[] responseS;
+                String url = "http://" + host + ":" + port + "/seed";
+                System.out.println(url);
+                String s;
+                JSONObject obj = new JSONObject();
+                obj.put("filename", filename);
+                obj.put("pieceid", pieceid);
 
-            obj.put("request", item);
-            s = obj.toString();
-            responseS = getBytePiece(url, s);
+                s = obj.toString();
+                try {
+                    responseS = getBytePiece(url, s);
+                } catch (Exception e) {
+                    System.out.println("\nCan not connect to: " + host + port);
+                    System.out.println("Resend request");
+                    url = "http://" + TRACKER_HOST + ":" + TRACKER_PORT + "/remove";
+                    obj.put("filename", filename);
+                    obj.put("pieceid", pieceid);
+                    obj.put("host", host);
+                    obj.put("port", port);
+                    body = sendPost(url, obj.toString());
+                    continue;
+                }
+//            System.out.println("Piece Id is "+ pieceid + "Item: " + Arrays.toString(responseS));
+                fm.addFile(filename, Integer.parseInt(pieceid), responseS);
 
-            fm.addFile(filename,Integer.parseInt(pieceid),responseS);
-            System.out.println(responseS);
+                url = "http://" + TRACKER_HOST + ":" + TRACKER_PORT + "/addpiece";
+                obj.put("filename", filename);
+                obj.put("pieceid", pieceid);
+                obj.put("host", HOST);
+                obj.put("port", String.valueOf(PORT));
+                sendPost(url,obj.toString());
 
-
-            out.println(body);
+                out.println();
+                break;
+            }
 
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.setStatus(HttpURLConnection.HTTP_BAD_REQUEST);
         }
 
     }

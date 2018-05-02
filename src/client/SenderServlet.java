@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
+import java.sql.Array;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -28,14 +30,12 @@ public class SenderServlet extends BaseServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         response.setStatus(400);
-
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         try {
-            PrintWriter out = response.getWriter();
             String body = extractPostRequestBody(request);
             JSONObject jsonobj = readJsonObj(body);
 
@@ -43,9 +43,7 @@ public class SenderServlet extends BaseServlet {
             String filename = (String)jsonobj.get("filename");
 
             byte[] piece = fm.getPiece(filename, Integer.parseInt(pieceid));
-
-            out.println(piece);
-
+            response.getOutputStream().write(piece);
 
         } catch (Exception e) {
             e.printStackTrace();

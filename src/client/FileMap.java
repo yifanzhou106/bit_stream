@@ -29,13 +29,13 @@ public class FileMap {
             if (!filemap.containsKey(filename)) {
                 filePieces = new TreeMap<>();
                 filePieces.put(pieceid, pieces);
-                filemap.put(filename, filePieces);
             } else {
                 filePieces = filemap.get(filename);
                 filePieces.put(pieceid, pieces);
                 filemap.remove(filename);
-                filemap.put(filename, filePieces);
             }
+            filemap.put(filename, filePieces);
+
         } finally {
             filemaplock.writeLock().unlock();
         }

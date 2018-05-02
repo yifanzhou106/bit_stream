@@ -37,11 +37,12 @@ public class Uploader extends BaseServlet implements Runnable {
                 } else {
                     piece = Arrays.copyOfRange(byteItem, i * FIXED_PIECE_SIZE, (i + 1) * FIXED_PIECE_SIZE);
                 }
+                System.out.println(Arrays.toString(piece));
                 fm.addFile(filename, i, piece);
             }
-//            byte[] byteValue = fm.getFile(filename, blockcount + 1);
-//            String string = new String(byteValue);
-//            System.out.println(string);
+            byte[] byteValue = fm.getFile(filename, blockcount + 1);
+            String string = new String(byteValue);
+            System.out.println(string);
 
             JSONObject obj = new JSONObject();
             JSONObject node = new JSONObject();

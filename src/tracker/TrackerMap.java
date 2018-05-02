@@ -73,7 +73,7 @@ public class TrackerMap {
         }
     }
 
-    public void updateFile(String filename, int finishedPiece, String nodekey) {
+    public void updateFile(String filename,String nodekey, int finishedPiece) {
         filemaplock.writeLock().lock();
         try {
             fileNodeDetail = filemap.get(filename);
@@ -90,6 +90,7 @@ public class TrackerMap {
             fileNodeDetail.put(nodekey, piecelist);
             filemap.remove(filename);
             filemap.put(filename, fileNodeDetail);
+            System.out.println(filemap);
 
         } finally {
             filemaplock.writeLock().unlock();
@@ -148,7 +149,6 @@ public class TrackerMap {
             JSONObject nodeinfo;
             fileNodeDetail = filemap.get(filename);
             while (count != piecenum) {
-                System.out.println(count);
                 for (HashMap.Entry<String, TreeSet<Integer>> entry : fileNodeDetail.entrySet()) {
                     piecelist = entry.getValue();
                     nodekey = entry.getKey();
@@ -166,6 +166,62 @@ public class TrackerMap {
                 }
             }
             return array;
+        } finally {
+            nodelock.readLock().unlock();
+            filemaplock.readLock().unlock();
+        }
+    }
+
+    public void removeNode(String host, String port) {
+        nodelock.writeLock().lock();
+        filemaplock.writeLock().lock();
+        try {
+            String key = host + port;
+            String filename;
+            if (nodeMap.containsKey(key)) {
+                nodeMap.remove(key);
+                for (Map.Entry<String, HashMap<String, TreeSet<Integer>>> entry : filemap.entrySet()) {
+                    filename = entry.getKey();
+                    fileNodeDetail = entry.getValue();
+                    if (fileNodeDetail.containsKey(key)) ;
+                    {
+                        fileNodeDetail.remove(key);
+                        filemap.remove(filename);
+                        filemap.put(filename, fileNodeDetail);
+                    }
+
+                }
+            }
+
+        } finally {
+            nodelock.writeLock().unlock();
+            filemaplock.writeLock().unlock();
+        }
+    }
+
+    public JSONObject getSinglePiece(String filename, int pieceid) {
+        nodelock.readLock().lock();
+        filemaplock.readLock().lock();
+        try {
+            String nodekey, host, port;
+            JSONObject nodeinfo = new JSONObject();
+            fileNodeDetail = filemap.get(filename);
+                for (HashMap.Entry<String, TreeSet<Integer>> entry : fileNodeDetail.entrySet()) {
+                    piecelist = entry.getValue();
+                    nodekey = entry.getKey();
+                    if (piecelist.contains(pieceid)) {
+                        singleNodeMap = nodeMap.get(nodekey);
+                        host = singleNodeMap.get("host");
+                        port = singleNodeMap.get("port");
+                        nodeinfo.put("host", host);
+                        nodeinfo.put("port", port);
+                        nodeinfo.put("filename", filename);
+                        nodeinfo.put("pieceid", String.valueOf(pieceid));
+
+                        return nodeinfo;
+                     }
+            }
+            return nodeinfo;
         } finally {
             nodelock.readLock().unlock();
             filemaplock.readLock().unlock();

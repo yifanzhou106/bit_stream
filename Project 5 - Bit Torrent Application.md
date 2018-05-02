@@ -63,9 +63,9 @@ Body:
 
 <pre>
 {
-	"host": "string",
-	"port": "string",
-	"filename": "string",
+  "host": "string",
+  "port": "string",
+  "filename": "string",
 }
 </pre>
 
@@ -76,17 +76,17 @@ Responses:
 	<tr><td>200</td><td>Node List
 <pre>
 {
-	nodes: [
-				{
-					"host": "string",
-					"port": "string",
-					"pieceid": "string"
-				}
-		   ] 
-	fileinfo: {
-				"piecenum": "string",
-				"size": "string"
-		  	  }
+  nodes: [
+		  {
+			  "host": "string",
+			  "port": "string",
+			  "pieceid": "string"
+		  }
+		 ] 
+  fileinfo: {
+			  "piecenum": "string",
+			  "size": "string"
+		  	}
 }	
 </pre></td></tr>
 	<tr><td>400</td><td>File request error</td></tr>
@@ -99,11 +99,10 @@ Responses:
 Body: 
 <pre>
 {
-	node: {
-			"host": "string",
-			"port": "string",
-			"pieceid": "string"
-		  } 
+  "host": "string",
+  "port": "string",
+  "pieceid": "string",
+  "filename": "string" 
 }
 </pre>
 
@@ -113,15 +112,15 @@ Responses:
 	<tr><td>Code</td><td>Description</td></tr>
 	<tr><td>200</td><td>Node List
 <pre>
+
 {
-	node: 
-			{
-				"host": "string",
-				"port": "string",
-				"pieceid": "string"
-			}
+  "host": "string",
+  "port": "string",
+  "pieceid": "string",
+  "filename": "string"
+}
 		   
-}	
+	
 </pre></td></tr>
 	<tr><td>400</td><td>piece request error</td></tr>
 </table>
@@ -137,10 +136,10 @@ Body:
 
 <pre>
 {
-	"host": "string",
-	"port": "string",
-	"pieceid": "string",
-	"filename": "string"	   
+  "host": "string",
+  "port": "string",
+  "pieceid": "string",
+  "filename": "string"	   
 }	
 </pre>
 
@@ -163,8 +162,8 @@ Body:
 
 <pre>
 {
-	"pieceid": "string",
-	"filename": "string"	   
+  "pieceid": "string",
+  "filename": "string"	   
 }	
 </pre>
 
