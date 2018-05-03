@@ -14,6 +14,20 @@ The architecture of the web application will be as follows:
 1. Receive file pieces and store into map
 2. Send file pieces by file name and piece ID
 
+### Architecture
+
+**Tracker** - Tracker will have three map:
+1. fileinfo (Map<String, HashMap<String, Integer>>) (filename, (piecenum, size))
+   Use filename as key, get piecenum and size.
+2. filemap (Map<String, HashMap<String, TreeSet<Integer>>>) (filename, (nodekey, (piecelist)))
+   For each filename, it has a list of nodekey including its download-finished piece ID. 
+3. nodeMap (Map<String, HashMap<String, String>>) (filemap, (host,port))
+   Manage node host and port info.
+
+**Client** - Client will have a map:
+1. filemap (Map<String, TreeMap<Integer, byte[]>>) (filename, (pieceid, (byte [])))
+   Store file in pieces.
+
 
 ### Logistics 
 
@@ -33,15 +47,15 @@ The architecture of the web application will be as follows:
 Body: 
 <pre>
 {
-	node: {
-			"host": "string",
-			"port": "string"
-		  } 
-	file: {
-			"filename": "string",
-			"piecenum": "string",
-			"size": "string"
-		  }
+  node: {
+	  "host": "string",
+	  "port": "string"
+        } 
+  file: {
+	  "filename": "string",
+	  "piecenum": "string",
+	  "size": "string"
+	}
 }
 </pre>
 
@@ -77,16 +91,16 @@ Responses:
 <pre>
 {
   nodes: [
-		  {
-			  "host": "string",
-			  "port": "string",
-			  "pieceid": "string"
-		  }
-		 ] 
+	   {
+	     "host": "string",
+	     "port": "string",
+   	     "pieceid": "string"
+	   }
+	 ] 
   fileinfo: {
-			  "piecenum": "string",
-			  "size": "string"
-		  	}
+	      "piecenum": "string",
+	      "size": "string"
+            }
 }	
 </pre></td></tr>
 	<tr><td>400</td><td>File request error</td></tr>
