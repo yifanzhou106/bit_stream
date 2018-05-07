@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
  */
 public class BitTorrentClient extends BaseServlet {
     public static String HOST = "localhost";
-    public static int PORT = 5800;
+    public static int PORT = 6000;
     public static String TRACKER_PORT = "7600";
     public static String TRACKER_HOST = "localhost";
     public static volatile boolean isShutdown = false;

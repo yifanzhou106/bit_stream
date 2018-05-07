@@ -41,7 +41,7 @@ public class AddPieceServlet extends BaseServlet {
             port = (String) obj.get("port");
             filename = (String) obj.get("filename");
             pieceid = Integer.parseInt((String) obj.get("pieceid"));
-            System.out.println("Node: " + host + port + " finished file " + filename + " piece# " + pieceid);
+            System.out.println("\nNode: " + host + port + " finished file " + filename + " piece #" + pieceid);
             tm.updateFile(filename, host + port, pieceid);
             out.println(obj.toString());
         } catch (Exception e) {

@@ -195,7 +195,7 @@ Responses:
 
 
 ### First Checking Point 
-Messages can be download and print using BitTorrent-like approach for downloading history
+Messages can be download and print using BitTorrent-like approach for downloading text message.
 
 ### Final Goal
 Program can send and download images, and more implements.

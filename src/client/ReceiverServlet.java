@@ -54,7 +54,6 @@ public class ReceiverServlet extends BaseServlet {
 
                 byte[] responseS;
                 String url = "http://" + host + ":" + port + "/seed";
-                System.out.println(url);
                 String s;
                 JSONObject obj = new JSONObject();
                 obj.put("filename", filename);
