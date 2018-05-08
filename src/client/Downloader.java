@@ -3,6 +3,11 @@ package client;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
@@ -53,9 +58,18 @@ public class Downloader extends BaseServlet implements Runnable {
 //                sendPostResponse(url, singlepiece.toString());
             }
             countdowntimer.await();
+            System.out.println("Download Finished");
             byte[] byteValue = fm.getFile(filename, piecenum);
-            String string = new String(byteValue);
-            System.out.println(string);
+
+            if (isDebug) {
+                String string = new String(byteValue);
+                System.out.println(string);
+            } else {
+                String newFileName = getNewFileName(filename);
+                System.out.println(newFileName);
+                storeImage(newFileName,byteValue);
+                System.out.println("Store "+ newFileName +" successfully");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

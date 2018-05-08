@@ -3,12 +3,17 @@ package client;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Scanner;
@@ -73,7 +78,7 @@ public class BaseServlet extends HttpServlet {
     }
 
     // HTTP GET request
-    protected String sendGet( String url) throws Exception {
+    protected String sendGet(String url) throws Exception {
 
 
         URL obj = new URL(url);
@@ -105,7 +110,7 @@ public class BaseServlet extends HttpServlet {
     }
 
     // HTTP POST request
-    protected String sendPost( String url, String urlParameters) throws Exception {
+    protected String sendPost(String url, String urlParameters) throws Exception {
 
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -145,7 +150,7 @@ public class BaseServlet extends HttpServlet {
     }
 
     // HTTP POST request
-    protected byte[] getBytePiece( String url, String urlParameters) throws Exception {
+    protected byte[] getBytePiece(String url, String urlParameters) throws Exception {
 
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -173,7 +178,7 @@ public class BaseServlet extends HttpServlet {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
 
             int n = 0;
-            while ((n = stream.read(buffer)) !=-1) {
+            while ((n = stream.read(buffer)) != -1) {
                 os.write(buffer, 0, n);
             }
             return os.toByteArray();
@@ -183,7 +188,7 @@ public class BaseServlet extends HttpServlet {
     }
 
     // HTTP POST request
-    protected int sendPostResponse( String url, String urlParameters) throws Exception {
+    protected int sendPostResponse(String url, String urlParameters) throws Exception {
 
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -230,4 +235,38 @@ public class BaseServlet extends HttpServlet {
         }
     }
 
+    public byte[] imageToBytes(String ImageName) throws IOException {
+        // open image
+
+        byte[] byteItem;
+        BufferedImage originalImage = ImageIO.read(new File(ImageName));
+
+        // convert BufferedImage to byte array
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(originalImage, "jpg", baos);
+        baos.flush();
+        byteItem = baos.toByteArray();
+        baos.close();
+
+        return byteItem;
+    }
+
+    protected String getNewFileName(String filename) {
+        String newFileName;
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String[] filenamearray = filename.split("\\.");
+        newFileName = filenamearray[0] + timestamp.getTime() + "." + filenamearray[1];
+        return newFileName;
+    }
+
+    protected void storeImage(String filename, byte[] byteValue) {
+        try {
+            // convert byte array back to BufferedImage
+            InputStream in = new ByteArrayInputStream(byteValue);
+            BufferedImage bImageFromConvert = ImageIO.read(in);
+            ImageIO.write(bImageFromConvert, "jpg", new File(filename));
+        } catch (IOException e) {
+            System.out.println("\nConvert image error");
+        }
+    }
 }

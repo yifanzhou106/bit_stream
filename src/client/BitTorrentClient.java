@@ -21,6 +21,7 @@ public class BitTorrentClient extends BaseServlet {
     public static int PORT = 6000;
     public static String TRACKER_PORT = "7600";
     public static String TRACKER_HOST = "localhost";
+    public static boolean isDebug = false;
     public static volatile boolean isShutdown = false;
     public final ExecutorService threads = Executors.newCachedThreadPool();
 
@@ -46,13 +47,17 @@ public class BitTorrentClient extends BaseServlet {
 //                PORT = Integer.parseInt(args[3]);
 //                System.out.println(PORT);
 //            }
-//            if (args[4].equals("-primaryhost")) {
+//            if (args[4].equals("-trackerhost")) {
 //                EVENT_HOST = args[5];
 //                System.out.println(EVENT_HOST);
 //            }
-//            if (args[6].equals("-primaryport")) {
+//            if (args[6].equals("-trackerport")) {
 //                EVENT_PORT = args[7];
 //                System.out.println(EVENT_PORT);
+//            }
+//            if (args.length>8){
+//                if (args[8].equals("-debug"))
+//                    isDebug = true;
 //            }
 //        }
         Server server = new Server(PORT);
@@ -62,13 +67,14 @@ public class BitTorrentClient extends BaseServlet {
 
         handler.addServletWithMapping(new ServletHolder(new ReceiverServlet(bt.fm)), "/receive");
         handler.addServletWithMapping(new ServletHolder(new SenderServlet(bt.fm)), "/seed");
-//        handler.addServletWithMapping(new ServletHolder(new FindNodeServlet(es.edm)), "/nodes");
+        handler.addServletWithMapping(new ServletHolder(new PrintJPG(bt.fm)), "/image/jpg");
 
 
         server.setHandler(handler);
 
 
         try {
+            System.out.println("Client port: " + PORT);
             server.start();
             server.join();
 

@@ -72,6 +72,17 @@ public class FileMap {
         }
     }
 
+    public int getPieceNum(String filename){
+        filemaplock.readLock().lock();
+        try{
+            filePieces = filemap.get(filename);
+            return filePieces.size();
+        }finally {
+            filemaplock.readLock().unlock();
+
+        }
+    }
+
     public JSONObject fileinfoJson(String filename, String size, String piecenum) {
 
         JSONObject fileinfo = new JSONObject();
