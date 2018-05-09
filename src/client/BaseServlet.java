@@ -20,6 +20,9 @@ import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
+import static client.BitTorrentClient.HOST;
+import static client.BitTorrentClient.PORT;
+
 /**
  * Provides base functionality to all servlets.
  */
@@ -235,11 +238,11 @@ public class BaseServlet extends HttpServlet {
         }
     }
 
-    public byte[] imageToBytes(String ImageName) throws IOException {
+    public byte[] imageToBytes(String path) throws IOException {
         // open image
 
         byte[] byteItem;
-        BufferedImage originalImage = ImageIO.read(new File(ImageName));
+        BufferedImage originalImage = ImageIO.read(new File(path));
 
         // convert BufferedImage to byte array
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -251,22 +254,48 @@ public class BaseServlet extends HttpServlet {
         return byteItem;
     }
 
-    protected String getNewFileName(String filename) {
-        String newFileName;
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        String[] filenamearray = filename.split("\\.");
-        newFileName = filenamearray[0] + timestamp.getTime() + "." + filenamearray[1];
-        return newFileName;
-    }
-
     protected void storeImage(String filename, byte[] byteValue) {
         try {
             // convert byte array back to BufferedImage
             InputStream in = new ByteArrayInputStream(byteValue);
             BufferedImage bImageFromConvert = ImageIO.read(in);
-            ImageIO.write(bImageFromConvert, "jpg", new File(filename));
+            ImageIO.write(bImageFromConvert, "jpg", new File("./download/" + filename));
         } catch (IOException e) {
             System.out.println("\nConvert image error");
         }
     }
+
+    public byte[] videoToBytes(String path) throws IOException {
+
+        FileInputStream fis = new FileInputStream(path);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] b = new byte[1024];
+
+        for (int readNum; (readNum = fis.read(b)) != -1; ) {
+            bos.write(b, 0, readNum);
+        }
+        byte[] bytes = bos.toByteArray();
+        return bytes;
+    }
+
+    protected void storeVideo(String filename, byte[] bytearray) {
+        try {
+            FileOutputStream fileoutputstream = new FileOutputStream("./download/" + filename);
+            fileoutputstream.write(bytearray);
+            fileoutputstream.close();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    protected String getNewFileName(String filename) {
+        String newFileName;
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String[] filenamearray = filename.split("\\.");
+        newFileName = filenamearray[0] + "_" + HOST + "_" + PORT + "_" + timestamp.getTime() + "." + filenamearray[1];
+        return newFileName;
+    }
+
+
 }

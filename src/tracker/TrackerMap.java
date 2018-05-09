@@ -73,7 +73,7 @@ public class TrackerMap {
         }
     }
 
-    public void updateFile(String filename,String nodekey, int finishedPiece) {
+    public void updateFile(String filename, String nodekey, int finishedPiece) {
         filemaplock.writeLock().lock();
         try {
             fileNodeDetail = filemap.get(filename);
@@ -206,20 +206,20 @@ public class TrackerMap {
             String nodekey, host, port;
             JSONObject nodeinfo = new JSONObject();
             fileNodeDetail = filemap.get(filename);
-                for (HashMap.Entry<String, TreeSet<Integer>> entry : fileNodeDetail.entrySet()) {
-                    piecelist = entry.getValue();
-                    nodekey = entry.getKey();
-                    if (piecelist.contains(pieceid)) {
-                        singleNodeMap = nodeMap.get(nodekey);
-                        host = singleNodeMap.get("host");
-                        port = singleNodeMap.get("port");
-                        nodeinfo.put("host", host);
-                        nodeinfo.put("port", port);
-                        nodeinfo.put("filename", filename);
-                        nodeinfo.put("pieceid", String.valueOf(pieceid));
+            for (HashMap.Entry<String, TreeSet<Integer>> entry : fileNodeDetail.entrySet()) {
+                piecelist = entry.getValue();
+                nodekey = entry.getKey();
+                if (piecelist.contains(pieceid)) {
+                    singleNodeMap = nodeMap.get(nodekey);
+                    host = singleNodeMap.get("host");
+                    port = singleNodeMap.get("port");
+                    nodeinfo.put("host", host);
+                    nodeinfo.put("port", port);
+                    nodeinfo.put("filename", filename);
+                    nodeinfo.put("pieceid", String.valueOf(pieceid));
 
-                        return nodeinfo;
-                     }
+                    return nodeinfo;
+                }
             }
             return nodeinfo;
         } finally {

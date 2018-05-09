@@ -15,7 +15,7 @@ import static client.BitTorrentClient.*;
 public class Uploader extends BaseServlet implements Runnable {
     private ExecutorService threads;
     private String filelocation;
-    final private int FIXED_PIECE_SIZE = 256;
+    private int FIXED_PIECE_SIZE = 256 * 1024;
     private FileMap fm;
 
 
@@ -31,12 +31,18 @@ public class Uploader extends BaseServlet implements Runnable {
             byte[] byteItem;
             String filename;
             if (isDebug) {
+                FIXED_PIECE_SIZE = 256;
                 String item = "As a globally-distributed database, Spanner provides several interesting features. First, the replication configurations for data can be dynamically controlled at a fine grain by applications Second, Spanner has two features that are difficult to implement in a distributed database: it provides externally consistent reads and writes, and globally-consistent reads across the database at a timestamp. These features enable Spanner to support consistent backups, consistent MapReduce executions, and atomic schema updates, all at global scale, and even in the presence of ongoing transactions.";
                 filename = "file1";
                 byteItem = item.getBytes(Charset.forName("UTF-8"));
             } else {
                 filename = filelocation;
-                byteItem = imageToBytes(filelocation);
+                String[] suffix = filename.split("\\.");
+                if (suffix[1].equals("jpg"))
+                    byteItem = imageToBytes(filelocation);
+                else {
+                    byteItem = videoToBytes(filelocation);
+                }
             }
 
             int blockcount = (byteItem.length) / FIXED_PIECE_SIZE;
@@ -50,16 +56,9 @@ public class Uploader extends BaseServlet implements Runnable {
                 }
                 fm.addFile(filename, i, piece);
             }
+
 //            byte[] byteValue = fm.getFile(filename, blockcount + 1);
-//
-//            String string = new String(byteValue);
-//            System.out.println(string);
-
-
-            // convert byte array back to BufferedImage
-//            InputStream in = new ByteArrayInputStream(byteValue);
-//            BufferedImage bImageFromConvert = ImageIO.read(in);
-//            ImageIO.write(bImageFromConvert, "jpg", new File("output1.jpg"));
+//            storeVideo(filename , byteValue);
 
 
             JSONObject obj = new JSONObject();
@@ -78,8 +77,7 @@ public class Uploader extends BaseServlet implements Runnable {
             sendPost(url, obj.toString());
             System.out.println("Upload successfully");
         } catch (Exception e) {
-            System.out.println("Upload Error");
-            e.printStackTrace();
+            System.out.println("Upload Error, cannot find file");
         }
 
     }

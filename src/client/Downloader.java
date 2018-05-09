@@ -67,8 +67,13 @@ public class Downloader extends BaseServlet implements Runnable {
             } else {
                 String newFileName = getNewFileName(filename);
                 System.out.println(newFileName);
-                storeImage(newFileName,byteValue);
-                System.out.println("Store "+ newFileName +" successfully");
+                String[] suffix = filename.split("\\.");
+                if (suffix[1].equals("jpg"))
+                    storeImage(newFileName, byteValue);
+                else
+                    storeVideo(newFileName, byteValue);
+
+                System.out.println("Store " + newFileName + " successfully");
             }
 
         } catch (Exception e) {

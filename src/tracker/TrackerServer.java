@@ -19,41 +19,30 @@ import java.net.URL;
  *
  * @Author Yifan Zhou
  */
-public class TrackerServer extends BaseServlet{
+public class TrackerServer extends BaseServlet {
     protected static Logger log = LogManager.getLogger();
     public static String HOST = "localhost";
     public static int PORT = 7600;
-    public static String EVENT_PORT = "7000";
-    public static  String EVENT_HOST = "localhost";
-    static int USER_PORT = 2000;
-    static String USER_HOST = "mc01";
 
     private TrackerMap tm;
 
     public TrackerServer() {
         tm = new TrackerMap();
     }
+
     public static void main(String[] args) {
         TrackerServer ts = new TrackerServer();
 
-//        if (args.length > 0) {
-//            if (args[0].equals("-localhost")) {
-//                HOST = args[1];
-//                System.out.println(HOST);
-//            }
-//            if (args[2].equals("-localport")) {
-//                PORT = Integer.parseInt(args[3]);
-//                System.out.println(PORT);
-//            }
-//            if (args[4].equals("-primaryhost")) {
-//                EVENT_HOST = args[5];
-//                System.out.println(EVENT_HOST);
-//            }
-//            if (args[6].equals("-primaryport")) {
-//                EVENT_PORT = args[7];
-//                System.out.println(EVENT_PORT);
-//            }
-//        }
+        if (args.length > 0) {
+            if (args[0].equals("-localhost")) {
+                HOST = args[1];
+                System.out.println(HOST);
+            }
+            if (args[2].equals("-localport")) {
+                PORT = Integer.parseInt(args[3]);
+                System.out.println(PORT);
+            }
+        }
         Server server = new Server(PORT);
 
         ServletHandler handler = new ServletHandler();
@@ -71,6 +60,7 @@ public class TrackerServer extends BaseServlet{
         log.info("Starting server on port " + PORT + "...");
 
         try {
+            System.out.println("Tracker port: " + PORT);
             server.start();
             server.join();
 
@@ -80,7 +70,6 @@ public class TrackerServer extends BaseServlet{
             System.exit(-1);
         }
     }
-
 
 
 }

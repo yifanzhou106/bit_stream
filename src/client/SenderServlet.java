@@ -39,8 +39,8 @@ public class SenderServlet extends BaseServlet {
             String body = extractPostRequestBody(request);
             JSONObject jsonobj = readJsonObj(body);
 
-            String pieceid = (String)jsonobj.get("pieceid");
-            String filename = (String)jsonobj.get("filename");
+            String pieceid = (String) jsonobj.get("pieceid");
+            String filename = (String) jsonobj.get("filename");
 
             byte[] piece = fm.getPiece(filename, Integer.parseInt(pieceid));
             response.getOutputStream().write(piece);

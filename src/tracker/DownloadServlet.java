@@ -41,7 +41,7 @@ public class DownloadServlet extends BaseServlet {
             port = (String) obj.get("port");
             filename = (String) obj.get("filename");
 
-            tm.addnode(host,port);
+            tm.addnode(host, port);
             piecenum = tm.getPieceNum(filename);
             size = tm.getFileSize(filename);
 
@@ -53,7 +53,7 @@ public class DownloadServlet extends BaseServlet {
 
             fileinfo.put("piecenum", String.valueOf(piecenum));
             fileinfo.put("size", String.valueOf(size));
-            obj.put("fileinfo",fileinfo);
+            obj.put("fileinfo", fileinfo);
             obj.put("nodes", array);
 
             out.println(obj.toString());

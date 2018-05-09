@@ -81,7 +81,7 @@ public class ReceiverServlet extends BaseServlet {
                 obj.put("pieceid", pieceid);
                 obj.put("host", HOST);
                 obj.put("port", String.valueOf(PORT));
-                sendPost(url,obj.toString());
+                sendPost(url, obj.toString());
 
                 out.println();
                 break;

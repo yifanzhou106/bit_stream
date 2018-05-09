@@ -43,9 +43,9 @@ public class RemoveNodeServlet extends BaseServlet {
             filename = (String) obj.get("filename");
             pieceid = Integer.parseInt((String) obj.get("pieceid"));
 
-            tm.removeNode(host,port);
-            System.out.println("\nRemove node "+ host+port);
-            obj = tm.getSinglePiece(filename,pieceid);
+            tm.removeNode(host, port);
+            System.out.println("\nRemove node " + host + port);
+            obj = tm.getSinglePiece(filename, pieceid);
             System.out.println("Provide a new node" + obj.toString());
             out.println(obj.toString());
         } catch (Exception e) {

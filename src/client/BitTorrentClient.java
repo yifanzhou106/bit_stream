@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
  */
 public class BitTorrentClient extends BaseServlet {
     public static String HOST = "localhost";
-    public static int PORT = 6000;
+    public static int PORT = 6200;
     public static String TRACKER_PORT = "7600";
     public static String TRACKER_HOST = "localhost";
     public static boolean isDebug = false;
@@ -30,7 +30,7 @@ public class BitTorrentClient extends BaseServlet {
 
     public BitTorrentClient() {
         fm = new FileMap();
-        ui = new UI(threads,fm);
+        ui = new UI(threads, fm);
         threads.submit(ui);
     }
 
@@ -38,28 +38,28 @@ public class BitTorrentClient extends BaseServlet {
     public static void main(String[] args) {
         BitTorrentClient bt = new BitTorrentClient();
 
-//        if (args.length > 0) {
-//            if (args[0].equals("-localhost")) {
-//                HOST = args[1];
-//                System.out.println(HOST);
-//            }
-//            if (args[2].equals("-localport")) {
-//                PORT = Integer.parseInt(args[3]);
-//                System.out.println(PORT);
-//            }
-//            if (args[4].equals("-trackerhost")) {
-//                EVENT_HOST = args[5];
-//                System.out.println(EVENT_HOST);
-//            }
-//            if (args[6].equals("-trackerport")) {
-//                EVENT_PORT = args[7];
-//                System.out.println(EVENT_PORT);
-//            }
-//            if (args.length>8){
-//                if (args[8].equals("-debug"))
-//                    isDebug = true;
-//            }
-//        }
+        if (args.length > 0) {
+            if (args[0].equals("-localhost")) {
+                HOST = args[1];
+                System.out.println(HOST);
+            }
+            if (args[2].equals("-localport")) {
+                PORT = Integer.parseInt(args[3]);
+                System.out.println(PORT);
+            }
+            if (args[4].equals("-trackerhost")) {
+                TRACKER_HOST = args[5];
+                System.out.println(TRACKER_HOST);
+            }
+            if (args[6].equals("-trackerport")) {
+                TRACKER_PORT = args[7];
+                System.out.println(TRACKER_PORT);
+            }
+            if (args.length > 8) {
+                if (args[8].equals("-debug"))
+                    isDebug = true;
+            }
+        }
         Server server = new Server(PORT);
 
         ServletHandler handler = new ServletHandler();
