@@ -10,7 +10,8 @@ import java.io.PrintWriter;
 
 
 /**
- * Create event, send info to event server
+ * If a client upload file, its json will be sent here.
+ * Tracker will store its node info and file info
  */
 public class CreateInfoServlet extends BaseServlet {
     private TrackerMap tm;

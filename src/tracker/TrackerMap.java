@@ -6,6 +6,9 @@ import org.json.simple.JSONObject;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * Several maps to store node and file info
+ */
 public class TrackerMap {
     private Map<String, HashMap<String, Integer>> fileinfo;
     private HashMap<String, Integer> singleFileinfo;
@@ -29,6 +32,12 @@ public class TrackerMap {
         filemap = new HashMap<>();
     }
 
+    /**
+     * Add a node
+     *
+     * @param host
+     * @param port
+     */
     public void addnode(String host, String port) {
         nodelock.writeLock().lock();
         try {
@@ -43,6 +52,13 @@ public class TrackerMap {
         }
     }
 
+    /**
+     * Add a new file info
+     *
+     * @param filename
+     * @param pieceNum
+     * @param size
+     */
     public void addNewFileInfo(String filename, int pieceNum, int size) {
         fileinfolock.writeLock().lock();
         try {
@@ -56,6 +72,14 @@ public class TrackerMap {
         }
     }
 
+    /**
+     * For a new seed, its piecelist will automatically be updated to full
+     *
+     * @param filename
+     * @param pieceNum
+     * @param nodekey
+     * @param size
+     */
     public void addNewFile(String filename, int pieceNum, String nodekey, int size) {
         filemaplock.writeLock().lock();
         try {
@@ -73,6 +97,13 @@ public class TrackerMap {
         }
     }
 
+    /**
+     * Add a single pieceid into list
+     *
+     * @param filename
+     * @param nodekey
+     * @param finishedPiece
+     */
     public void updateFile(String filename, String nodekey, int finishedPiece) {
         filemaplock.writeLock().lock();
         try {
@@ -139,6 +170,13 @@ public class TrackerMap {
         }
     }
 
+    /**
+     * A simple algorithm to select node to create a complete file
+     *
+     * @param filename
+     * @param piecenum
+     * @return
+     */
     public JSONArray nodeJsonArray(String filename, int piecenum) {
         nodelock.readLock().lock();
         filemaplock.readLock().lock();
@@ -172,6 +210,12 @@ public class TrackerMap {
         }
     }
 
+    /**
+     * Remove node from map
+     *
+     * @param host
+     * @param port
+     */
     public void removeNode(String host, String port) {
         nodelock.writeLock().lock();
         filemaplock.writeLock().lock();
@@ -199,6 +243,13 @@ public class TrackerMap {
         }
     }
 
+    /**
+     * If a node fails, get a new node here
+     *
+     * @param filename
+     * @param pieceid
+     * @return
+     */
     public JSONObject getSinglePiece(String filename, int pieceid) {
         nodelock.readLock().lock();
         filemaplock.readLock().lock();

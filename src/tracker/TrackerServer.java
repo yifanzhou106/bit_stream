@@ -1,26 +1,17 @@
 package tracker;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.json.simple.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 /**
  * Project 5 - BT
+ * Tracker server
  *
  * @Author Yifan Zhou
  */
 public class TrackerServer extends BaseServlet {
-    protected static Logger log = LogManager.getLogger();
     public static String HOST = "localhost";
     public static int PORT = 7600;
 
@@ -57,16 +48,15 @@ public class TrackerServer extends BaseServlet {
         server.setHandler(handler);
 
 
-        log.info("Starting server on port " + PORT + "...");
+        System.out.println("Starting server on port " + PORT + "...");
 
         try {
             System.out.println("Tracker port: " + PORT);
             server.start();
             server.join();
 
-            log.info("Exiting...");
+            System.out.println("Exiting...");
         } catch (Exception ex) {
-            log.fatal("Interrupted while running server.", ex);
             System.exit(-1);
         }
     }

@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 
 /**
  * Project 5 - BT
+ * BT Client
  *
  * @Author Yifan Zhou
  */

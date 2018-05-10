@@ -10,6 +10,9 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * Handle with all data maps in client
+ */
 public class FileMap {
 
     private Map<String, TreeMap<Integer, byte[]>> filemap;
@@ -22,7 +25,13 @@ public class FileMap {
         filemap = new HashMap<>();
     }
 
-
+    /**
+     * Add a single piece in to filemap
+     *
+     * @param filename
+     * @param pieceid
+     * @param pieces
+     */
     public void addFile(String filename, int pieceid, byte[] pieces) {
         filemaplock.writeLock().lock();
         try {
@@ -41,6 +50,13 @@ public class FileMap {
         }
     }
 
+    /**
+     * Get single file pieces
+     *
+     * @param filename
+     * @param pieceid
+     * @return
+     */
     public byte[] getPiece(String filename, int pieceid) {
         filemaplock.readLock().lock();
         try {
@@ -54,6 +70,13 @@ public class FileMap {
         }
     }
 
+    /**
+     * Combine all pieces together
+     *
+     * @param filename
+     * @param piecenum
+     * @return
+     */
     public byte[] getFile(String filename, int piecenum) {
         filemaplock.readLock().lock();
         try {
@@ -72,6 +95,12 @@ public class FileMap {
         }
     }
 
+    /**
+     * Get file total piece number
+     *
+     * @param filename
+     * @return
+     */
     public int getPieceNum(String filename){
         filemaplock.readLock().lock();
         try{

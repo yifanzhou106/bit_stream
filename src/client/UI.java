@@ -7,7 +7,9 @@ import java.util.concurrent.ExecutorService;
 
 import static client.BitTorrentClient.isShutdown;
 
-
+/**
+ * UI: handle with user input
+ */
 public class UI implements Runnable {
 
     private ExecutorService threads;
@@ -22,7 +24,6 @@ public class UI implements Runnable {
     @Override
     public void run() {
         while (!isShutdown) {
-            boolean ifPrint = false;
             Scanner reader = new Scanner(System.in);
             System.out.println("Enter your choices (Enter \"help\" for help): ");
             String userChoice = reader.nextLine();

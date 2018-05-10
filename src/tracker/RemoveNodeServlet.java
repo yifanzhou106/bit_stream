@@ -10,7 +10,8 @@ import java.io.PrintWriter;
 
 
 /**
- * Create event, send info to event server
+ * If a client cannot connect to a node, it will send a request here
+ * to remove the invalid node and request a new node
  */
 public class RemoveNodeServlet extends BaseServlet {
     private TrackerMap tm;

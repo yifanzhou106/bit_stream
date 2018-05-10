@@ -214,7 +214,7 @@ public class BaseServlet extends HttpServlet {
         return responseCode;
 
     }
-
+    //Runable send post
     public class sendReceive implements Runnable {
         private String url;
         private String jsonString;

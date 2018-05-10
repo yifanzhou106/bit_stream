@@ -46,10 +46,7 @@ public class SenderServlet extends BaseServlet {
             response.getOutputStream().write(piece);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            response.setStatus(HttpURLConnection.HTTP_BAD_REQUEST);
         }
-
     }
 
 }

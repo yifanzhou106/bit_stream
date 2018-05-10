@@ -150,11 +150,6 @@ public class BaseServlet extends HttpServlet {
 
     }
 
-    protected String getTimeStamp(String Host, int Port) {
-        String timestamp;
-        UUID idOne = UUID.randomUUID();
-        timestamp = Host + Port + idOne;
-        return timestamp;
-    }
+
 
 }

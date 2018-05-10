@@ -11,7 +11,8 @@ import java.io.PrintWriter;
 
 
 /**
- * Create event, send info to event server
+ * If a client wants to download a file, its json will be sent here.
+ * Tracker will store its node info and send it file info and a node list
  */
 public class DownloadServlet extends BaseServlet {
     private TrackerMap tm;

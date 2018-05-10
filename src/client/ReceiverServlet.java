@@ -7,20 +7,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
-import java.net.HttpURLConnection;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static client.BitTorrentClient.*;
 
 
 /**
- * Create events
+ * Create connection with a node and receive a single piece
+ * If a node fails, then ask tracker for a new node
  */
 public class ReceiverServlet extends BaseServlet {
     private FileMap fm;
@@ -63,6 +58,10 @@ public class ReceiverServlet extends BaseServlet {
                 try {
                     responseS = getBytePiece(url, s);
                 } catch (Exception e) {
+
+                    /**
+                     * Ask and receive a new node, then update local variables
+                     */
                     System.out.println("\nCan not connect to: " + host + port);
                     System.out.println("Resend request");
                     url = "http://" + TRACKER_HOST + ":" + TRACKER_PORT + "/remove";

@@ -2,15 +2,8 @@ package client;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-
 import static client.BitTorrentClient.*;
 
 public class Downloader extends BaseServlet implements Runnable {
@@ -44,6 +37,9 @@ public class Downloader extends BaseServlet implements Runnable {
             responseS = sendPost(url, s);
             System.out.println(responseS);
 
+            /**
+             * Read json string and begin to communicate with provided nodes
+             */
             JSONObject jsonobj = readJsonObj(responseS);
             JSONObject fileinfo = (JSONObject) jsonobj.get("fileinfo");
             JSONArray nodes = (JSONArray) jsonobj.get("nodes");
@@ -58,6 +54,10 @@ public class Downloader extends BaseServlet implements Runnable {
 //                sendPostResponse(url, singlepiece.toString());
             }
             countdowntimer.await();
+
+            /**
+             * Receive all pieces and begin to combine all pieces together
+             */
             System.out.println("Download Finished");
             byte[] byteValue = fm.getFile(filename, piecenum);
 

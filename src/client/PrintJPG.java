@@ -12,7 +12,7 @@ import java.util.TreeMap;
 
 
 /**
- * Create events
+ * Show user a image
  */
 public class PrintJPG extends BaseServlet {
     private FileMap fm;

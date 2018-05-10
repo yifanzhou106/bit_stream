@@ -10,7 +10,7 @@ import java.io.PrintWriter;
 
 
 /**
- * Create event, send info to event server
+ * If a piece is downloaded successfully, a request will be sent here to update map
  */
 public class AddPieceServlet extends BaseServlet {
     private TrackerMap tm;
